@@ -21,7 +21,15 @@ optional arguments:
   -host HOST  Определяет IP адрес сервера, на который необходимо посылать сообщения
   -port PORT  Определяет порт сервера, на который необходимо посылать сообщения
 ```
+```
+./dir_monitor_server.py -h
+usage: dir_monitor_server.py [-h] [-host HOST] [-port PORT]
 
+optional arguments:
+  -h, --help  show this help message and exit
+  -host HOST  Определяет IP адрес данного сервера
+  -port PORT  Определяет порт данного сервера
+```
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
