@@ -4,7 +4,8 @@ Foobar is a Python library for dealing with word pluralization.
 
 ## Requirements
 
-```python 3.x
+```
+python 3.x
 watchdog library
 ```
 
