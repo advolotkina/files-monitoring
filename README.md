@@ -15,7 +15,7 @@
 ## Requirements
 
 ```
-python 3.x, virtualenv, pip
+python 3.6+, virtualenv, pip
 watchdog library
 jsonchema library
 ```
