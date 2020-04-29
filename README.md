@@ -6,7 +6,7 @@
 Сервер обрабатывает сообщения клиентов и выводит на экран информацию о событии:
 
 ````
-{Время получения сообщения}| {путь до файла}                                    |{размер}    |{тип события}
+{Время получения сообщения}| {путь до файла}                                                        |{размер}    |{тип события}
 2020-04-29 17:43:50.925681 | /home/zhblnd/PycharmProjects/file-monitor/test_dir/sds/wgrr            |            | DELETED
 2020-04-29 17:43:50.925730 | /home/zhblnd/PycharmProjects/file-monitor/.idea/workspace.xml          | 8159       | MODIFIED
 2020-04-29 17:43:50.925751 | /home/zhblnd/PycharmProjects/file-monitor/dir_monitor_server.py        | 3718       | MODIFIED
