@@ -20,7 +20,7 @@ watchdog library
 jsonchema library
 ```
 
-##Setup
+## Setup
 
 ```
 virtualenv venv
