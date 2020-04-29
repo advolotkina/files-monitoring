@@ -19,7 +19,7 @@ message_schema = {
         "properties": {
             "file_path": {"type": "string"},
             "event_type": {"type": "integer"},
-            "file_size": {"type": "string"}
+            "file_size": {"type": "integer"}
         }
     }
     ]
@@ -60,12 +60,12 @@ def serve_client_connection(conn):
 
     for message in messages:
         print(f"{datetime.datetime.now()} | "
-              f"{message['file_path']:70} | "
+              f"{message['file_path']:100} | "
               f"{message['file_size']:10} | "
               f"{events[message['event_type']]}")
 
 
-def read_message(conn, delimiter=b'!'):
+def read_message(conn, delimiter=b'/'):
     """
     Данный метод считывает данные из сокета.
     :param conn: Объект сокета, из которого необходимо считать данные.
