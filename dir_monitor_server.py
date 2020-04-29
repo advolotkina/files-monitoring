@@ -19,7 +19,7 @@ message_schema = {
         "properties": {
             "file_path": {"type": "string"},
             "event_type": {"type": "integer"},
-            "file_size": {"type": "number"}
+            "file_size": {"type": "string"}
         }
     }
     ]
@@ -59,9 +59,9 @@ def serve_client_connection(conn):
         return
 
     for message in messages:
-        print(f"{datetime.datetime.now()} "
-              f"{message['file_path']} "
-              f"{message['file_size']} "
+        print(f"{datetime.datetime.now()} | "
+              f"{message['file_path']:50} | "
+              f"{message['file_size']:10} | "
               f"{events[message['event_type']]}")
 
 
@@ -89,8 +89,8 @@ def read_message(conn, delimiter=b'!'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-host', help='Определяет IP адрес данного сервера', default=HOST)
-    parser.add_argument('-port', type=int, help='Определяет порт данного сервера', default=PORT)
+    parser.add_argument('-host', help='Определяет IP адрес данного сервера, по умолчанию - 127.0.0.2', default=HOST)
+    parser.add_argument('-port', type=int, help='Определяет порт данного сервера, по умолчанию - 8888', default=PORT)
     args = parser.parse_args()
     if args.host:
         HOST = args.host

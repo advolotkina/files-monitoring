@@ -53,7 +53,7 @@ def prepare_data(snap_diff):
             json_message.append({
                 'file_path': file,
                 'event_type': CREATED,
-                'file_size': os.stat(file).st_size
+                'file_size': str(os.stat(file).st_size)
             })
 
     if snap_diff.files_modified:
@@ -61,7 +61,7 @@ def prepare_data(snap_diff):
             json_message.append({
                 'file_path': file,
                 'event_type': MODIFIED,
-                'file_size': os.stat(file).st_size
+                'file_size': str(os.stat(file).st_size)
             })
 
     if snap_diff.files_deleted:
