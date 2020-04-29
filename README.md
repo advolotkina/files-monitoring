@@ -24,12 +24,16 @@ jsonchema library
 
 ```
 virtualenv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
 ## Usage
 
 ```
+Execute "./dir_monitor.py [-h] -dir DIR -host HOST -port PORT" on Linux 
+or "python dir_monitor.py [-h] -dir DIR -host HOST -port PORT" on Windows
+
 $ ./dir_monitor.py -h
 usage: dir_monitor.py [-h] -dir DIR -host HOST -port PORT
 

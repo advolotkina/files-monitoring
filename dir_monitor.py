@@ -97,6 +97,10 @@ if __name__ == '__main__':
         print(f'{DIR} - по данному пути нет папки.')
         sys.exit(0)
 
+    if not(os.access(DIR, os.R_OK)):
+        print(f'У вас нет доступа для чтения папки {DIR}')
+        sys.exit(0)
+
     snap_before_sleep = DirectorySnapshot(DIR, True)
     while True:
         time.sleep(2)
