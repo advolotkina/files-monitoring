@@ -11,8 +11,42 @@ MODIFIED = 0
 CREATED = 1
 DELETED = 2
 
+message_buffer = []
+
 
 def send_update(snap_diff):
+    """
+    Метод для передачи сообщений серверу.
+    При возникновении ошибки соединения, неотправленные сообщения складываются в буффер.
+    """
+    json_message = prepare_data(snap_diff)
+    global message_buffer
+    if json_message is None:
+        return
+
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            if message_buffer:
+                json_message += message_buffer
+            message_buffer.clear()
+
+            s.connect((HOST, PORT))
+            s.sendall(bytes(json.dumps(json_message) + '!', encoding='utf-8'))
+    except ConnectionRefusedError as c:
+        message_buffer += json_message
+        print(c)
+    except ConnectionError as c:
+        message_buffer += json_message
+        print(c)
+
+
+def prepare_data(snap_diff):
+    """
+    Метод для упаковки событий в удобный для передачи формат.
+    :param snap_diff: Объект DirectorySnapshotDiff, содержащий в себе списки:
+    files_created, files_modified, files_deleted
+    :return: Список словарей. Каждый элемент представляет собой событие о файле.
+    """
     json_message = []
     if snap_diff.files_created:
         for file in snap_diff.files_created:
@@ -37,35 +71,37 @@ def send_update(snap_diff):
                 'event_type': DELETED,
                 'file_size': ''
             })
-
     if not json_message:
-        return
+        return None
 
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((HOST, PORT))
-            s.sendall(bytes(json.dumps(json_message) + '!', encoding='utf-8'))
-    except ConnectionRefusedError:
-        print('Connection refused')
+    return json_message
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-dir', type=str, help='Определяет директорию, файлы которой, необходимо отслеживать')
-    parser.add_argument('-host', help='Определяет IP адрес сервера, на который необходимо посылать сообщения')
-    parser.add_argument('-port', help='Определяет порт сервера, на который необходимо посылать сообщения')
+    parser.add_argument('-dir', '-d',
+                        help='Определяет директорию, файлы которой, необходимо отслеживать',
+                        required=True)
+    parser.add_argument('-host',
+                        help='Определяет IP адрес сервера, на который необходимо посылать сообщения',
+                        required=True)
+    parser.add_argument('-port', '-p',
+                        type=int,
+                        help='Определяет порт сервера, на который необходимо посылать сообщения',
+                        required=True)
     args = parser.parse_args()
     DIR = args.dir
     HOST = args.host
-    PORT = int(args.port)
+    PORT = args.port
 
     if not (os.path.exists(DIR) and os.path.isdir(DIR)):
         print(f'{DIR} - по данному пути нет папки.')
         sys.exit(0)
 
+    snap_before_sleep = DirectorySnapshot(DIR, True)
     while True:
-        snap_before_sleep = DirectorySnapshot(DIR, True)
         time.sleep(2)
         snap_after_sleep = DirectorySnapshot(DIR, True)
         diff_snap = DirectorySnapshotDiff(snap_before_sleep, snap_after_sleep)
         send_update(diff_snap)
+        snap_before_sleep = snap_after_sleep
