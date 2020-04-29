@@ -7,12 +7,10 @@
 
 ````
 {Время получения сообщения}| {путь до файла}                                    |{размер}    |{тип события}
-2020-04-29 17:22:14.370767 | ./test_dir/sds/wgrr                                | 20         | MODIFIED
-2020-04-29 17:22:14.370814 | ./.idea/workspace.xml                              | 6734       | MODIFIED
-2020-04-29 17:22:24.549601 | ./test_dir/dhdhdd/dDdD.py                          | 0          | CREATED
-2020-04-29 17:22:28.638154 | ./test_dir/dhdhdd/dDdD.py                          | 16         | MODIFIED
-2020-04-29 17:22:28.638203 | ./.idea/workspace.xml                              | 6734       | MODIFIED
-2020-04-29 17:22:36.793983 | ./test_dir/dhdhdd/dxgrdg.py                        |            | DELETED
+2020-04-29 17:43:50.925681 | /home/zhblnd/PycharmProjects/file-monitor/test_dir/sds/wgrr            |            | DELETED
+2020-04-29 17:43:50.925730 | /home/zhblnd/PycharmProjects/file-monitor/.idea/workspace.xml          | 8159       | MODIFIED
+2020-04-29 17:43:50.925751 | /home/zhblnd/PycharmProjects/file-monitor/dir_monitor_server.py        | 3718       | MODIFIED
+2020-04-29 17:44:07.223176 | /home/zhblnd/PycharmProjects/file-monitor/test_dir/dhdhdd/fasAAA.py    | 0          | CREATED
 ````
 ## Requirements
 

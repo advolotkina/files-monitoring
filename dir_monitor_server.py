@@ -60,7 +60,7 @@ def serve_client_connection(conn):
 
     for message in messages:
         print(f"{datetime.datetime.now()} | "
-              f"{message['file_path']:50} | "
+              f"{message['file_path']:70} | "
               f"{message['file_size']:10} | "
               f"{events[message['event_type']]}")
 
