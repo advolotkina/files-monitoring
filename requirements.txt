@@ -1,3 +1,2 @@
-watchdog==0.10.2
 jsonschema==3.2.0
 

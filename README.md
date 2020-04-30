@@ -16,7 +16,6 @@
 
 ```
 python 3.6+, virtualenv, pip
-watchdog library
 jsonchema library
 ```
 

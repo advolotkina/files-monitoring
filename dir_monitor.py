@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import argparse
 import os
-from watchdog.utils.dirsnapshot import DirectorySnapshot, DirectorySnapshotDiff
 import time
 import socket
 import json
 import sys
+from dir_snapshot import snap_dir, compare_dir_snaps
 
 MODIFIED = 0
 CREATED = 1
@@ -14,12 +14,11 @@ DELETED = 2
 message_buffer = []
 
 
-def send_update(snap_diff, stat_info):
+def send_update(json_message):
     """
     Метод для передачи сообщений серверу.
     При возникновении ошибки соединения, неотправленные сообщения складываются в буффер.
     """
-    json_message = prepare_data(snap_diff, stat_info)
     global message_buffer
     if json_message is None:
         return
@@ -40,7 +39,7 @@ def send_update(snap_diff, stat_info):
         print(c)
 
 
-def prepare_data(snap_diff, stat_info):
+def prepare_data(created, deleted, modified):
     """
     Метод для упаковки событий в удобный для передачи формат.
     :param snap_diff: Объект DirectorySnapshotDiff, содержащий в себе списки:
@@ -48,28 +47,25 @@ def prepare_data(snap_diff, stat_info):
     :return: Список словарей. Каждый элемент представляет собой событие о файле.
     """
     json_message = []
-    if snap_diff.files_created:
-        for file in snap_diff.files_created:
-            json_message.append({
-                'file_path': file,
+    for file in created:
+        json_message.append({
+                'file_path': file[0],
                 'event_type': CREATED,
-                'file_size': stat_info[file].st_size
+                'file_size': file[1]
             })
-    if snap_diff.files_modified:
-        for file in snap_diff.files_modified:
-            json_message.append({
-                'file_path': file,
+    for file in deleted:
+        json_message.append({
+                'file_path': file[0],
+                'event_type': DELETED,
+                'file_size': file[1]
+            })
+    for file in modified:
+        json_message.append({
+                'file_path': file[0],
                 'event_type': MODIFIED,
-                'file_size': stat_info[file].st_size
+                'file_size': file[1]
             })
 
-    if snap_diff.files_deleted:
-        for file in snap_diff.files_deleted:
-            json_message.append({
-                'file_path': file,
-                'event_type': DELETED,
-                'file_size': -1
-            })
     if not json_message:
         return None
 
@@ -101,14 +97,15 @@ if __name__ == '__main__':
         print(f'У вас нет доступа для чтения папки {DIR}')
         sys.exit(0)
 
-    snap_before_sleep = DirectorySnapshot(DIR, True)
+    snap_before_sleep = snap_dir(DIR)
     while True:
         time.sleep(2)
         try:
-            snap_after_sleep = DirectorySnapshot(DIR, True)
-            diff_snap = DirectorySnapshotDiff(snap_before_sleep, snap_after_sleep)
+            snap_after_sleep = snap_dir(DIR)
+            created, deleted, modified = compare_dir_snaps(snap_before_sleep, snap_after_sleep)
         except FileNotFoundError:
             print('Ваша папка была удалена')
             sys.exit(0)
-        send_update(diff_snap, snap_after_sleep._stat_info)
+        json_message = prepare_data(created, deleted, modified)
+        send_update(json_message)
         snap_before_sleep = snap_after_sleep
