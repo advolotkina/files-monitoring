@@ -47,19 +47,19 @@ def prepare_data(created, deleted, modified):
     :return: Список словарей. Каждый элемент представляет собой событие о файле.
     """
     json_message = []
-    for file in created:
+    for file in sorted(created):
         json_message.append({
                 'file_path': file[0],
                 'event_type': CREATED,
                 'file_size': file[1]
             })
-    for file in deleted:
+    for file in sorted(deleted):
         json_message.append({
                 'file_path': file[0],
                 'event_type': DELETED,
                 'file_size': file[1]
             })
-    for file in modified:
+    for file in sorted(modified):
         json_message.append({
                 'file_path': file[0],
                 'event_type': MODIFIED,

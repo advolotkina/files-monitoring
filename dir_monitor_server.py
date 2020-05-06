@@ -58,8 +58,9 @@ def serve_client_connection(conn):
     if messages is None:
         return
 
+    receive_time = datetime.datetime.now()
     for message in messages:
-        print(f"{datetime.datetime.now()} | "
+        print(f"{receive_time} | "
               f"{message['file_path']:100} | "
               f"{message['file_size']:10} | "
               f"{events[message['event_type']]}")
