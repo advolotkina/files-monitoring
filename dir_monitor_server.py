@@ -33,7 +33,7 @@ def deserialize_message(client_message):
     :return: None если сообщение клиента не является валидным json. Инача возвращается список объектов словаря.
     """
     try:
-        json_message = json.loads(str(client_message[0:-1], encoding='utf-8'))
+        json_message = json.loads(str(client_message, encoding='utf-8'))
     except json.JSONDecodeError:
         return None
     try:
@@ -51,7 +51,7 @@ def serve_client_connection(conn):
     :return:
     """
     client_message = read_message(conn)
-    if client_message is None:
+    if not client_message:
         return
 
     messages = deserialize_message(client_message)
@@ -66,13 +66,9 @@ def serve_client_connection(conn):
               f"{events[message['event_type']]}")
 
 
-def read_message(conn, delimiter=b'/'):
+def read_message(conn):
     """
     Данный метод считывает данные из сокета.
-    :param conn: Объект сокета, из которого необходимо считать данные.
-    :param delimiter: Последний символ в каждом сообщении клиента.
-    :return: Возвращает None, если соедниние было прервано или сообщение клиента в виде bytearray в случае удачной
-    передачи.
     """
     request = bytearray()
     try:
@@ -80,10 +76,8 @@ def read_message(conn, delimiter=b'/'):
             while True:
                 chunk = conn.recv(4096)
                 if not chunk:
-                    return None
-                request += chunk
-                if delimiter in request:
                     return request
+                request += chunk
     except ConnectionResetError:
         return None
 

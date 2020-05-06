@@ -30,7 +30,7 @@ def send_update(json_message):
             message_buffer.clear()
 
             s.connect((HOST, PORT))
-            s.sendall(bytes(json.dumps(json_message) + '/', encoding='utf-8'))
+            s.sendall(bytes(json.dumps(json_message), encoding='utf-8'))
     except ConnectionRefusedError as c:
         message_buffer += json_message
         print(c)
